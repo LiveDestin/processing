@@ -1,0 +1,105 @@
+float ballY = 0;
+float gravity = .2;
+float velocity = 0;
+float topValue = random(50,300);
+float bottomValue = topValue+150;
+float obstacleX = 500;
+boolean alive = true;
+int score = 0;
+
+void setup(){
+  size(500,500);
+  refresh();
+  obstacle();
+  ballY = 0;
+  gravity = .2;
+  velocity = 0;
+  topValue = random(50,300);
+  bottomValue = topValue+150;
+  obstacleX = 500;
+  alive = true;
+  score = 0;
+}
+
+
+void refresh(){
+  if(ballY > 450){
+    alive = false;
+  }
+  if (alive==true){
+    velocity = velocity + gravity;
+    ballY = ballY+velocity;
+    background(0,100,255);
+    fill(255,100,0);
+    ellipse(150,ballY,50,50);
+    fill(0,150,0);
+    rect(0,480,500,20);
+    fill(0);
+    rect(obstacleX,0,75,topValue);
+    rect(obstacleX,bottomValue,75,500);
+    obstacleX = obstacleX-2;
+  }
+}
+
+void jump(){
+  if (keyPressed == true){
+    if(velocity > 2  ){
+      velocity = -6;
+    }
+  }
+}  
+
+void obstacle(){
+  if(obstacleX+75<0){
+    topValue = random(50,300);
+    bottomValue = topValue+150;
+    obstacleX = 500;
+  }
+}
+
+void collisionCheck(){
+  if ((obstacleX+75>125)&&(obstacleX<175)){  
+    if((ballY+25>bottomValue)||(ballY-25<topValue)){
+      alive=false;
+    }
+  }
+}
+
+void restartScreen(){
+  textSize(50);
+  fill(255,0,0);
+  text("You died",130,200);
+  fill(100);
+  rect(130,250,200,100);
+  fill(0);
+  text("Restart",150,320);
+}
+
+void mouseClicked(){
+  if (alive==false){
+    if((mouseY>250)&(mouseY<350)&(mouseX>130)&(mouseX<330)){
+      setup();
+    }
+  }
+}
+
+void scoreCheck(){
+  if(obstacleX == 60){
+    score++;
+  }
+  fill(255,0,0);
+  textSize(40);
+  text(score,450,50);
+}
+
+void draw(){
+  if (alive){
+    refresh();
+    jump();
+    obstacle();
+    collisionCheck();
+  }else{
+   restartScreen();
+  }
+  scoreCheck();
+}
